@@ -5,6 +5,6 @@ public class City
     public int Id { get; set; }
     public string Name { get; set; }
 
-    // Navigation to 'Shop'
+    // Navegación hacia una lista de 'Shop'
     public List<Shop> Shops { get; } = [];
 }

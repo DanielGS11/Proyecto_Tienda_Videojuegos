@@ -5,8 +5,9 @@ public class Provider
     public int Id { get; set; }
     public string Name { get; set; }
 
-    // Navigation to all the products ('Videogame' and 'Console')
+    // Navegación hacia una lista general de 'Product' ('Videogame' y 'Platform')
     public List<Product> Products { get; set; } = [];
 
-    public List<City> Destinations { get; set; } = [];
+    // Navegación hacia la lista de 'City'
+    public List<City> Cities { get; set; } = [];
 }

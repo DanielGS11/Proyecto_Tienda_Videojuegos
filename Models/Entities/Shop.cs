@@ -5,16 +5,16 @@ public class Shop
     public int Id { get; set; }
     public string Name { get; set; }
 
-    // Navigation to 'City'
-    public City City { get; set; }
+    // Navegación hacia la lista de 'City'
+    public List<City> Cities { get; }
 
-    // Navigation to all the products ('Videogame' and 'Console')
+    // Navegación hacia una lista general de 'Product' ('Videogame' y 'Platform')
     public List<Product> Products { get; } = [];
 
-    // Navigation to 'Employee'
+    // Navegación hacia la lista de 'Employee'
     public List<Employee> Employees { get; } = [];
 
-    // Navigation to 'Providers'
+    // Navegación hacia la lista de 'Provider'
      public List<Provider> Providers { get; } = [];
     
 }

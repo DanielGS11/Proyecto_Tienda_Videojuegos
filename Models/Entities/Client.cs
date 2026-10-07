@@ -5,6 +5,6 @@ public class Client
     public int Id { get; set; }
     public string Name { get; set; }
 
-    // Navigation to 'City'
-    public City City { get; }
+    // FK de 'City'
+    public int CityId { get; }
 }
