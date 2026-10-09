@@ -9,8 +9,9 @@ public class VideogameDBContext : DbContext
 
     // Tablas de la BBDD
     public DbSet<Videogame> Videogames { get; set; }
-    public DbSet<Shop> Shops { get; set; }
     public DbSet<Platform> Platforms { get; set; }
+    public DbSet<Product> Products { get; set; }
+    public DbSet<Shop> Shops { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<Receipt> Receipts { get; set; }
     public DbSet<Employee> Employees { get; set; }
@@ -24,9 +25,8 @@ public class VideogameDBContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         /*
-            Uso la estrategia TPC ya que no necesito la tabla 'Product', solo sus hijos,
-            tablas como 'Shop' o 'OrderItem' tienen una lista de 'Product', pero para que
-            se puedan almacenar tanto 'Videogame' como 'Platform' sin diferenciar explícitamente
+            Uso la estrategia TPC ya que necesito relacionar las tablas 'Platform' y 'Videogame' entre si,
+            siendo ambas hijas de 'Product', ademas de que ambas se puedan meter en listas de 'Product'
         */
         modelBuilder.Entity<Product>().UseTpcMappingStrategy();
 
