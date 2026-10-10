@@ -3,7 +3,7 @@ using Proyecto_Tienda_Videojuegos.Context;
 
 namespace Proyecto_Tienda_Videojuegos.Controllers;
 
-[Route("api/other")]
+[Route("api/others")]
 [ApiController]
 public class OtherController : ControllerBase
 {

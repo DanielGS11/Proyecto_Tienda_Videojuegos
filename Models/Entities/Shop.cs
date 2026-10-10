@@ -1,20 +1,23 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace Proyecto_Tienda_Videojuegos.Models.Entities;
 
+[Index(nameof(Name), IsUnique = true)]
 public class Shop
 {
     public int Id { get; set; }
     public string Name { get; set; }
 
-    // Navegación hacia la lista de 'City'
+    // Navigation to the Cities
     public List<City> Cities { get; }
 
-    // Navegación hacia una lista general de 'Product' ('Videogame' y 'Platform')
+    // Navigation to the Products (Videogame and Platform)
     public List<Product> Products { get; } = [];
 
-    // Navegación hacia la lista de 'Employee'
+    // Navigation to the Employees
     public List<Employee> Employees { get; } = [];
 
-    // Navegación hacia la lista de 'Provider'
+    // Navigation to the Providers
      public List<Provider> Providers { get; } = [];
     
 }

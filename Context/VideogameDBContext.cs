@@ -7,7 +7,7 @@ public class VideogameDBContext : DbContext
 {
     public VideogameDBContext(DbContextOptions options) : base(options) { }
 
-    // Tablas de la BBDD
+    // DB Tables
     public DbSet<Videogame> Videogames { get; set; }
     public DbSet<Platform> Platforms { get; set; }
     public DbSet<Product> Products { get; set; }
@@ -19,15 +19,11 @@ public class VideogameDBContext : DbContext
     public DbSet<Provider> Providers { get; set; }
     public DbSet<City> Cities { get; set; }
 
-    // Creación de relaciones entre tablas
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        /*
-            Uso la estrategia TPC ya que necesito relacionar las tablas 'Platform' y 'Videogame' entre si,
-            siendo ambas hijas de 'Product', ademas de que ambas se puedan meter en listas de 'Product'
-        */
+        // I used TPC so I can relate 'Platform' and 'Videogame', which are 'Product' subclasses
         modelBuilder.Entity<Product>().UseTpcMappingStrategy();
 
         // Videogame - Platform     N:M

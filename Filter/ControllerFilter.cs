@@ -15,7 +15,6 @@ public class ControllerFilter : IDocumentFilter
         docs.Tags.Add(new OpenApiTag { Name = "Provider" });
         docs.Tags.Add(new OpenApiTag { Name = "City" });
         docs.Tags.Add(new OpenApiTag { Name = "Order" });
-        
-        docs.Tags.Add(new OpenApiTag { Name = "Other" });
+        docs.Tags.Add(new OpenApiTag { Name = "Others" });
     }
 }
