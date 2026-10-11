@@ -38,10 +38,9 @@ public class CityController : ControllerBase
             Id = c.Id,
             Name = c.Name,
             Shops = c.Shops.Select(s => s.Name).ToList()
+        }).FirstOrDefaultAsync();
 
-        }).ToListAsync();
-
-        if (result is null || result.Count <= 0)
+        if (result is null)
             return NotFound();
 
         return Ok(result);
@@ -50,7 +49,7 @@ public class CityController : ControllerBase
     [HttpPost("CreateCity")]
     public async Task<IActionResult> CreateCity(string name)
     {
-        var nameExists = await _context.Cities.AnyAsync(c => c.Name.ToLower() == name.ToLower());
+        var nameExists = await _context.Cities.AnyAsync(c => c.Name.ToLower().Trim() == name.ToLower().Trim());
 
         if (nameExists)
             return BadRequest("The city already exists");
@@ -86,14 +85,14 @@ public class CityController : ControllerBase
     [HttpPut("UpdateCity/{id}")]
     public async Task<IActionResult> UpdateCity(int id, string newName)
     {
-        var nameExists = await _context.Cities.AnyAsync(c => c.Name.ToLower() == newName.ToLower());
+        var nameExists = await _context.Cities.AnyAsync(c => c.Name.ToLower().Trim() == newName.ToLower().Trim());
 
         if (nameExists)
             return BadRequest("There is already a city with that name");
 
         var rowsAfected = await _context.Cities.Where(c => c.Id == id)
             .ExecuteUpdateAsync(c => c.SetProperty(c => c.Name, newName));
-
+        
         if (rowsAfected <= 0)
             return NotFound();
 

@@ -4,15 +4,15 @@ public class Order
 {
     public int Id { get; set; }
     
-    // FK de 'Client'
+    // FK of the Client
     public int ClientId { get; }
 
-    // Navegación hacia una lista de 'OrderProduct'
+    // Navigation to the OrderProducts
     public List<OrderProduct> OrderProducts { get; } = [];
 
     public DateTime CreatedAt { get; }
     public float TotalPrice { get; set; }
 
-    // Navegación opcional hacia 'Receipt'
+    // Optional navigation to the Receipt
     public Receipt? Receipt { get; set; } = null;
 }

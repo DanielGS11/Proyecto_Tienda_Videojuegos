@@ -8,6 +8,6 @@ public class Videogame : Product
 
     public List<Genre> Genres { get; set; } = [];
 
-    // Navegación hacia la lista de 'Platform'
+    // Navigation to the Platforms
     public List<Platform> Platforms { get; } = [];
 }

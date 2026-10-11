@@ -4,10 +4,10 @@ public class OrderProduct
 {
     public int Id { get; set; }
     
-    // FK de 'Order'
+    // FK of the Order
     public int OrderId { get; set; }
     
-    // FK opcional de 'Product' (Platform o Videogame)
+    // Optional FK of the Product (Platform or Videogame)
     public int? ProductId { get; set; } = null;
 
     public string ProductName { get; set; }

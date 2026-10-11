@@ -1,13 +1,17 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace Proyecto_Tienda_Videojuegos.Models.Entities;
 
+// Set Name as unique value to avoid duplicates
+[Index(nameof(Name), IsUnique = true)]
 public class Provider
 {
     public int Id { get; set; }
     public string Name { get; set; }
 
-    // Navegación hacia una lista general de 'Product' ('Videogame' y 'Platform')
+    // Navigation to the Products (Videogame and Platform)
     public List<Product> Products { get; set; } = [];
 
-    // Navegación hacia la lista de 'City'
+    // Navigation to the Cities
     public List<City> Cities { get; set; } = [];
 }

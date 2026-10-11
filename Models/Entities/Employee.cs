@@ -5,9 +5,9 @@ public class Employee
     public int Id { get; set; }
     public string Name { get; set; }
 
-    // FK de 'City'
-    public int CityId { get; }
+    // FK of the City
+    public int CityId { get; set; }
 
-    // FK de 'Shop'
-    public int ShopId { get; }
+    // FK of the Shop
+    public int ShopId { get; set; }
 }

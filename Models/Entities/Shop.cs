@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Proyecto_Tienda_Videojuegos.Models.Entities;
 
+// Set Name as unique value to avoid duplicates
 [Index(nameof(Name), IsUnique = true)]
 public class Shop
 {

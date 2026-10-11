@@ -4,7 +4,7 @@ public class Receipt
 {
     public int Id { get; set; }
 
-    // FK de 'Order'
+    // FK of the Order
     public int OrderId { get; }
 
     public DateTime CreatedAt { get; set; }

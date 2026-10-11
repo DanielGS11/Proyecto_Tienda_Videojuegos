@@ -9,12 +9,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(s =>
     s.DocumentFilter<ControllerFilter>());
 
-// Serializar enums como cadena al mostrarse en formato Json
+// Serialize enums as string when showing in Json
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
-// Añadir contexto y cadena de conexión a la DB
+// Add the contexto and connection string to the DB
 builder.Services.AddDbContext<VideogameDBContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -32,12 +32,12 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Borramos y creamos la DB en cada ejecución, cambiar una vez el proyecto se termine por migrations
+// Delete and create the Dd per execution, change with migrations when the project is finished
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<VideogameDBContext>();
 
-    await dbContext.Database.EnsureDeletedAsync();
+    //await dbContext.Database.EnsureDeletedAsync();
     await dbContext.Database.EnsureCreatedAsync();
 }
 
