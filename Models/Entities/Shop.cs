@@ -10,15 +10,15 @@ public class Shop
     public string Name { get; set; }
 
     // Navigation to the Cities
-    public List<City> Cities { get; }
+    public List<City> Cities { get; set; } = [];
 
     // Navigation to the Products (Videogame and Platform)
-    public List<Product> Products { get; } = [];
+    public List<Product> Products { get; set; } = [];
 
     // Navigation to the Employees
-    public List<Employee> Employees { get; } = [];
+    public List<Employee> Employees { get; set; } = [];
 
     // Navigation to the Providers
-     public List<Provider> Providers { get; } = [];
+     public List<Provider> Providers { get; set; } = [];
     
 }

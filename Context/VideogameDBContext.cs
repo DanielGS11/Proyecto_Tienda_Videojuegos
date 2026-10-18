@@ -13,6 +13,7 @@ public class VideogameDBContext : DbContext
     public DbSet<Product> Products { get; set; }
     public DbSet<Shop> Shops { get; set; }
     public DbSet<Order> Orders { get; set; }
+    public DbSet<OrderProduct> OrderProducts { get; set; }
     public DbSet<Receipt> Receipts { get; set; }
     public DbSet<Employee> Employees { get; set; }
     public DbSet<Client> Clients { get; set; }
@@ -99,7 +100,7 @@ public class VideogameDBContext : DbContext
         
         // Order - OrderProduct                             N:1
         modelBuilder.Entity<Order>()
-            .HasMany(o => o.OrderProducts)
+            .HasMany(o => o.OrderedProducts)
             .WithOne()
             .HasForeignKey(op => op.OrderId)
             .IsRequired();

@@ -4,6 +4,7 @@ using Proyecto_Tienda_Videojuegos.Context;
 using Proyecto_Tienda_Videojuegos.Filter;
 
 var builder = WebApplication.CreateBuilder(args);
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(s =>

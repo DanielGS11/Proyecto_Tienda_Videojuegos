@@ -9,5 +9,5 @@ public class Videogame : Product
     public List<Genre> Genres { get; set; } = [];
 
     // Navigation to the Platforms
-    public List<Platform> Platforms { get; } = [];
+    public List<Platform> Platforms { get; set; } = [];
 }

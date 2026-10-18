@@ -6,5 +6,5 @@ public class Client
     public string Name { get; set; }
 
     // FK of the City
-    public int CityId { get; }
+    public int CityId { get; set; }
 }
