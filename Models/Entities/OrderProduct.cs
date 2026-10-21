@@ -11,6 +11,6 @@ public class OrderProduct
     public int? ProductId { get; set; } = null;
 
     public string ProductName { get; set; }
-    public int Quantity { get; set; } = 1;
+    public int Quantity { get; set; } = 0;
     public float Price { get; set; }
 }

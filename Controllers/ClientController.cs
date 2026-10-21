@@ -74,10 +74,10 @@ public class ClientController : ControllerBase
         return Ok();
     }
 
-    [HttpDelete("UpdateClientCity/client/{id}/city/{cityId}")]
-    public async Task<IActionResult> UpdateClientCity(int id, int cityId)
+    [HttpPut("UpdateClientCity/client/{clientId}/city/{cityId}")]
+    public async Task<IActionResult> UpdateClientCity(int clientId, int cityId)
     {
-        var client = await _context.Clients.FindAsync(id);
+        var client = await _context.Clients.FindAsync(clientId);
 
         if (client is null)
             return NotFound("The client does not exists");

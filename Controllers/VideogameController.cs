@@ -152,7 +152,7 @@ public class VideogameController : ControllerBase
         if (platform is null)
             return NotFound("The platform does not exists");
 
-        var videogame = await _context.Videogames.FindAsync(gameId);
+        var videogame = await _context.Videogames.Include(v => v.Platforms).FirstOrDefaultAsync(v => v.Id == gameId);
 
         if (videogame is null)
             return NotFound("The videogame does not exists");

@@ -6,7 +6,7 @@ using Proyecto_Tienda_Videojuegos.Models.Enums;
 
 namespace Proyecto_Tienda_Videojuegos.Controllers;
 
-[Route("api/others")]
+[Route("api/other")]
 [ApiController]
 public class OtherController : ControllerBase
 {
@@ -61,52 +61,52 @@ public class OtherController : ControllerBase
         _context.Cities.AddRange([city1, city2, city3]);
         await _context.SaveChangesAsync();
 
-        var platform1 = new Platform { Name = "Nintendo Switch", Price = 329, Company = "Nintendo" };
-        var platform2 = new Platform { Name = "PS5", Price = 650, Company = "Sony" };
-        var platform3 = new Platform { Name = "Xbox Series X", Price = 699.99f, Company = "Microsoft" };
-        var platform4 = new Platform { Name = "PC", Price = 500, Company = "None" };
+        var platform1 = new Platform { Name = "Platform 1", Price = 329, Company = "Company 1" };
+        var platform2 = new Platform { Name = "Platform 2", Price = 650, Company = "Company 2" };
+        var platform3 = new Platform { Name = "Platform 3", Price = 699.99f, Company = "Company 3" };
+        var platform4 = new Platform { Name = "Platform 4", Price = 500, Company = "Company 4" };
 
         _context.Platforms.AddRange([platform1, platform2, platform3, platform4]);
         await _context.SaveChangesAsync();
 
-        var videogame1 = new Videogame { Name = "Pokemon Black", Price = 44.99f, Developer = "Game Freak", 
+        var videogame1 = new Videogame { Name = "Game 1", Price = 44.99f, Developer = "Dev 1", 
             Genres = [Genre.RPG, Genre.Adventure], Platforms = [platform1] };
-        var videogame2 = new Videogame { Name = "GTA V", Price = 59.99f, Developer = "Rockstar", 
+        var videogame2 = new Videogame { Name = "Game 2", Price = 59.99f, Developer = "Dev 2", 
             Genres = [Genre.OpenWorld, Genre.Action], Platforms = [platform1, platform3, platform4] };
-        var videogame3 = new Videogame { Name = "Bloodborne", Price = 50, Developer = "From Software", 
+        var videogame3 = new Videogame { Name = "Game 3", Price = 50, Developer = "Dev 3", 
             Genres = [Genre.Action], Platforms = [platform2] };
         
         _context.Videogames.AddRange([videogame1, videogame2, videogame3]);
         await _context.SaveChangesAsync();
         
-        var provider1 = new Provider { Name = "Nintendo", Products = [platform1, videogame1], 
+        var provider1 = new Provider { Name = "Provider 1", Products = [platform1, videogame1], 
             Cities = [city1, city3] };
-        var provider2 = new Provider { Name = "Microsoft", Products = [platform3, videogame2], 
+        var provider2 = new Provider { Name = "Provider 2", Products = [platform3, videogame2], 
             Cities = [city3] };
-        var provider3 = new Provider { Name = "General Provider", Products = [platform1, platform2, platform3, 
+        var provider3 = new Provider { Name = "Provider 3", Products = [platform1, platform2, platform3, 
             platform4, videogame1, videogame2, videogame3], Cities = [city1, city2, city3] };
         
         _context.Providers.AddRange([provider1, provider2, provider3]);
         await _context.SaveChangesAsync();
         
-        var shop1 = new Shop { Name = "Game", Cities = [city1, city2, city3], Products = [platform1, platform2, platform3,
+        var shop1 = new Shop { Name = "Shop 1", Cities = [city1, city2, city3], Products = [platform1, platform2, platform3,
             videogame1, videogame2, videogame3], Providers = [provider1, provider3] };
-        var shop2 = new Shop { Name = "PcComponentes", Products = [platform4, videogame1, videogame2, videogame3],
+        var shop2 = new Shop { Name = "Shop 2", Products = [platform4, videogame1, videogame2, videogame3],
             Providers = [provider1, provider3] };
         
         _context.Shops.AddRange([shop1, shop2]);
         await _context.SaveChangesAsync();
         
-        var employee1 = new Employee { Name = "Charles", CityId = city1.Id, ShopId = shop1.Id };
-        var employee2 = new Employee { Name = "Marshal", CityId = city2.Id, ShopId = shop2.Id };
-        var employee3 = new Employee { Name = "Penny", CityId = city3.Id, ShopId = shop1.Id };
+        var employee1 = new Employee { Name = "Employee 1", CityId = city1.Id, ShopId = shop1.Id };
+        var employee2 = new Employee { Name = "Employee 2", CityId = city2.Id, ShopId = shop2.Id };
+        var employee3 = new Employee { Name = "Employee 3", CityId = city3.Id, ShopId = shop1.Id };
 
         _context.Employees.AddRange([employee1, employee2, employee3]);
         await _context.SaveChangesAsync();
         
-        var client1 = new Client { Name = "John", CityId = city1.Id };
-        var client2 = new Client { Name = "Jess", CityId = city3.Id };
-        var client3 = new Client { Name = "Miguel", CityId = city2.Id };
+        var client1 = new Client { Name = "Client 1", CityId = city1.Id };
+        var client2 = new Client { Name = "Client 2", CityId = city3.Id };
+        var client3 = new Client { Name = "Client 3", CityId = city2.Id };
 
         _context.Clients.AddRange([client1, client2, client3]);
         await _context.SaveChangesAsync();

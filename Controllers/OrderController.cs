@@ -146,12 +146,12 @@ public class OrderController : ControllerBase
 
         if (!clientExists)
             return NotFound("The client does not exists");
-        
+
         var product = await _context.Products.FindAsync(newOrder.ProductId);
 
         if (product is null)
             return NotFound("The product does not exists");
-        
+
         var order = new Order
         {
             ClientId = newOrder.ClientId,
@@ -173,29 +173,34 @@ public class OrderController : ControllerBase
     }
 
     [HttpPost("AddProductToOrder/product/{productId}/order/{orderId}")]
-    public async Task<IActionResult> CreateOrder(int productId, int orderId, int quantity)
+    public async Task<IActionResult> AddProductToOrder(int productId, int orderId, int quantity)
     {
-        var order = await _context.Orders.Include(o => o.OrderedProducts).FirstOrDefaultAsync(o => o.Id == orderId);
+        var order = await _context.Orders.Include(o => o.OrderedProducts).Include(o => o.Receipt).FirstOrDefaultAsync(o => o.Id == orderId);
 
         if (order is null)
             return NotFound("The order does not exists");
+
+        if (order.Receipt != null)
+            return BadRequest("The order has a receipt generated and cannot be modified");
 
         var product = await _context.Products.FindAsync(productId);
 
         if (product is null)
             return NotFound("The product does not exists");
-        
-        OrderProduct? orderProduct = order.OrderedProducts.FirstOrDefault(o => o.ProductId == productId);
+
+        OrderProduct? orderProduct = order.OrderedProducts.Find(o => o.ProductId == productId);
 
         if (orderProduct is null)
-            orderProduct = new OrderProduct{OrderId = orderId, ProductId = productId};
+        {
+            orderProduct = new OrderProduct { OrderId = orderId, ProductId = productId, ProductName = product.Name };
             _context.OrderProducts.Add(orderProduct);
-        
+        }
+
         orderProduct.Quantity += quantity;
-            
+
         orderProduct.Price = product.Price * orderProduct.Quantity;
 
-        order.TotalPrice += product.Price * quantity;
+        order.TotalPrice += (product.Price * quantity);
 
         await _context.SaveChangesAsync();
 
@@ -205,14 +210,14 @@ public class OrderController : ControllerBase
     [HttpPost("CreateReceipt/order/{orderId}")]
     public async Task<IActionResult> CreateReceipt(int orderId)
     {
-        var order = await _context.Orders.FindAsync(orderId);
+        var order = await _context.Orders.Include(o => o.Receipt).FirstOrDefaultAsync(o => o.Id == orderId);
 
         if (order is null)
             return NotFound("The order does not exists");
-        
-        if (order.Receipt == null) 
+
+        if (order.Receipt != null)
             return BadRequest("The order has already a receipt");
-        
+
         _context.Receipts.Add(new Receipt { OrderId = orderId, CreatedAt = DateTime.Now, Price = order.TotalPrice });
         await _context.SaveChangesAsync();
 
@@ -226,7 +231,7 @@ public class OrderController : ControllerBase
 
         if (rowsAffected <= 0)
             return NotFound();
-        
+
         return Ok();
     }
 
@@ -237,16 +242,22 @@ public class OrderController : ControllerBase
 
         if (orderProduct is null)
             return NotFound();
-        
-        var order = await _context.Orders.FindAsync(orderProduct.OrderId);
 
+        var order = await _context.Orders.Include(o => o.OrderedProducts).Include(o => o.Receipt).FirstOrDefaultAsync(o => o.Id == orderProduct.OrderId);
+
+        if (order.Receipt != null)
+            return BadRequest("The order has a receipt generated and cannot be modified");
+
+        order.TotalPrice -= orderProduct.Price;
         _context.OrderProducts.Remove(orderProduct);
-        
-        if (order.OrderedProducts.Count <= 0)
-            _context.Orders.Remove(order);
-        
         await _context.SaveChangesAsync();
-        
+
+        if (order.OrderedProducts.Count <= 0)
+        {
+            _context.Orders.Remove(order);
+            await _context.SaveChangesAsync();
+        }
+
         return Ok();
     }
 
@@ -257,7 +268,7 @@ public class OrderController : ControllerBase
 
         if (rowsAffected <= 0)
             return NotFound();
-        
+
         return Ok();
     }
 }
