@@ -31,7 +31,7 @@ public class OrderController : ControllerBase
             {
                 ProductName = op.ProductName,
                 Quantity = op.Quantity,
-                Price = op.Price
+                Price = $"{op.Price}$"
             }).ToList(),
             CreatedAt = o.CreatedAt,
             TotalPrice = $"{o.TotalPrice}$",
@@ -56,7 +56,7 @@ public class OrderController : ControllerBase
             {
                 ProductName = op.ProductName,
                 Quantity = op.Quantity,
-                Price = op.Price
+                Price = $"{op.Price}$"
             }).ToList(),
             CreatedAt = o.CreatedAt,
             TotalPrice = $"{o.TotalPrice}$",
