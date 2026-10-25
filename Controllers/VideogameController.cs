@@ -31,7 +31,7 @@ public class VideogameController : ControllerBase
             Stock = v.Stock,
             Developer = v.Developer,
             Genres = v.Genres,
-            Price = $"{v.Price:C}",
+            Price = $"{v.Price}$",
             Platforms = v.Platforms.Select(p => p.Name).ToList()
         }).Skip((page - 1) * 10).Take(10).ToListAsync();
 
@@ -48,7 +48,7 @@ public class VideogameController : ControllerBase
             Stock = v.Stock,
             Developer = v.Developer,
             Genres = v.Genres,
-            Price = $"{v.Price:C}",
+            Price = $"{v.Price}$",
             Platforms = v.Platforms.Select(p => p.Name).ToList()
         }).FirstOrDefaultAsync();
 

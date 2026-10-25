@@ -30,7 +30,7 @@ public class ProviderController : ControllerBase
             Products = p.Products.Select(pr => new
             {
                 Name = pr.Name,
-                Price = $"{pr.Price:C}"
+                Price = $"{pr.Price}$"
             }).ToList()
         }).Skip((page - 1) * 10).Take(10).ToListAsync();
 
@@ -48,7 +48,7 @@ public class ProviderController : ControllerBase
             Products = p.Products.Select(pr => new
             {
                 Name = pr.Name,
-                Price = $"{pr.Price:C}"
+                Price = $"{pr.Price}$"
             }).ToList()
         }).FirstOrDefaultAsync();
 

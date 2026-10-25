@@ -34,7 +34,7 @@ public class OrderController : ControllerBase
                 Price = op.Price
             }).ToList(),
             CreatedAt = o.CreatedAt,
-            TotalPrice = $"{o.TotalPrice:C}",
+            TotalPrice = $"{o.TotalPrice}$",
             Receipt = o.Receipt == null ? null : new
             {
                 Id = o.Receipt.Id,
@@ -59,7 +59,7 @@ public class OrderController : ControllerBase
                 Price = op.Price
             }).ToList(),
             CreatedAt = o.CreatedAt,
-            TotalPrice = $"{o.TotalPrice:C}",
+            TotalPrice = $"{o.TotalPrice}$",
             Receipt = o.Receipt == null ? null : new
             {
                 Id = o.Receipt.Id,
@@ -84,7 +84,7 @@ public class OrderController : ControllerBase
             Id = r.Id,
             OrderId = r.OrderId,
             CreatedAt = r.CreatedAt,
-            Price = r.Price
+            Price = $"{r.Price}$"
         }).Skip((page - 1) * 10).Take(10).ToListAsync();
 
         return Ok(result);
@@ -98,7 +98,7 @@ public class OrderController : ControllerBase
             Id = r.Id,
             OrderId = r.OrderId,
             CreatedAt = r.CreatedAt,
-            Price = r.Price
+            Price = $"{r.Price}$"
         }).FirstOrDefaultAsync();
 
         if (result is null)
@@ -120,7 +120,7 @@ public class OrderController : ControllerBase
             ProductId = o.ProductId,
             ProductName = o.ProductName,
             Quantity = o.Quantity,
-            Price = o.Price
+            Price = $"{o.Price}$"
         }).Skip((page - 1) * 10).Take(10).ToListAsync();
 
         return Ok(result);
@@ -136,7 +136,7 @@ public class OrderController : ControllerBase
             ProductId = o.ProductId,
             ProductName = o.ProductName,
             Quantity = o.Quantity,
-            Price = o.Price
+            Price = $"{o.Price}$"
         }).FirstOrDefaultAsync();
 
         if (result is null)

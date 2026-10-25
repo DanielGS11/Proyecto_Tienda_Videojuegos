@@ -32,7 +32,7 @@ public class ShopController : ControllerBase
             Products = s.Products.Select(p => new 
             {
                 Name = p.Name,
-                Price = $"{p.Price:C}"
+                Price = $"{p.Price}$"
             }).ToList()
         }).Skip((page - 1) * 10).Take(10).ToListAsync();
 
@@ -52,7 +52,7 @@ public class ShopController : ControllerBase
             Products = s.Products.Select(p => new
             {
                 Name = p.Name,
-                Price = $"{p.Price:C}"
+                Price = $"{p.Price}$"
             }).ToList()
         }).FirstOrDefaultAsync();
 

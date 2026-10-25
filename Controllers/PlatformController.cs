@@ -29,7 +29,7 @@ public class PlatformController : ControllerBase
             Name = p.Name,
             Stock = p.Stock,
             Company = p.Company,
-            Price = $"{p.Price:C}"
+            Price = $"{p.Price}$"
         }).Skip((page - 1) * 10).Take(10).ToListAsync();
 
         return Ok(result);
@@ -44,7 +44,7 @@ public class PlatformController : ControllerBase
             Name = p.Name,
             Stock = p.Stock,
             Company = p.Company,
-            Price = $"{p.Price:C}"
+            Price = $"{p.Price}$"
         }).FirstOrDefaultAsync();
 
         if (result is null)
