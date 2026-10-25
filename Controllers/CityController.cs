@@ -17,15 +17,18 @@ public class CityController : ControllerBase
     }
 
     [HttpGet("GetCities")]
-    public async Task<IActionResult> GetCities()
+    public async Task<IActionResult> GetCities(int page = 1)
     {
+        if (page < 1)
+            return BadRequest("The page number must be greater than 0");
+
         var result = await _context.Cities.Select(c => new
         {
             Id = c.Id,
             Name = c.Name,
             Shops = c.Shops.Select(s => s.Name).ToList()
 
-        }).ToListAsync();
+        }).Skip((page - 1) * 10).Take(10).ToListAsync();
 
         return Ok(result);
     }

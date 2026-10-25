@@ -18,15 +18,19 @@ public class PlatformController : ControllerBase
     }
 
     [HttpGet("GetPlatforms")]
-    public async Task<IActionResult> GetPlatforms()
+    public async Task<IActionResult> GetPlatforms(int page = 1)
     {
+        if (page < 1)
+            return BadRequest("The page number must be greater than 0");
+
         var result = await _context.Platforms.Select(p => new
         {
             Id = p.Id,
             Name = p.Name,
+            Stock = p.Stock,
             Company = p.Company,
             Price = $"{p.Price:C}"
-        }).ToListAsync();
+        }).Skip((page - 1) * 10).Take(10).ToListAsync();
 
         return Ok(result);
     }
@@ -38,6 +42,7 @@ public class PlatformController : ControllerBase
         {
             Id = p.Id,
             Name = p.Name,
+            Stock = p.Stock,
             Company = p.Company,
             Price = $"{p.Price:C}"
         }).FirstOrDefaultAsync();

@@ -17,8 +17,11 @@ public class ShopController : ControllerBase
     }
 
     [HttpGet("GetShops")]
-    public async Task<IActionResult> GetShops()
+    public async Task<IActionResult> GetShops(int page = 1)
     {
+        if (page < 1)
+            return BadRequest("The page number must be greater than 0");
+
         var result = await _context.Shops.Select(s => new
         {
             Id = s.Id,
@@ -31,7 +34,7 @@ public class ShopController : ControllerBase
                 Name = p.Name,
                 Price = $"{p.Price:C}"
             }).ToList()
-        }).ToListAsync();
+        }).Skip((page - 1) * 10).Take(10).ToListAsync();
 
         return Ok(result);
     }
@@ -145,7 +148,7 @@ public class ShopController : ControllerBase
         return Ok();
     }
 
-    [HttpDelete("RemoveProductFromShop/provider/{productId}/shop/{shopId}")]
+    [HttpDelete("RemoveProductFromShop/product/{productId}/shop/{shopId}")]
     public async Task<IActionResult> RemoveProductFromShop(int productId, int shopId)
     {
         var product = await _context.Products.FindAsync(productId);

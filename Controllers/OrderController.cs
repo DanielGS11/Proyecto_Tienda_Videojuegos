@@ -18,8 +18,11 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet("GetOrders")]
-    public async Task<IActionResult> GetOrders()
+    public async Task<IActionResult> GetOrders(int page = 1)
     {
+        if (page < 1)
+            return BadRequest("The page number must be greater than 0");
+
         var result = await _context.Orders.Select(o => new
         {
             Id = o.Id,
@@ -37,7 +40,7 @@ public class OrderController : ControllerBase
                 Id = o.Receipt.Id,
                 CreatedAt = o.Receipt.CreatedAt
             },
-        }).ToListAsync();
+        }).Skip((page - 1) * 10).Take(10).ToListAsync();
 
         return Ok(result);
     }
@@ -71,15 +74,18 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet("GetReceipts")]
-    public async Task<IActionResult> GetReceipts()
+    public async Task<IActionResult> GetReceipts(int page = 1)
     {
+        if (page < 1)
+            return BadRequest("The page number must be greater than 0");
+
         var result = await _context.Receipts.Select(r => new
         {
             Id = r.Id,
             OrderId = r.OrderId,
             CreatedAt = r.CreatedAt,
             Price = r.Price
-        }).ToListAsync();
+        }).Skip((page - 1) * 10).Take(10).ToListAsync();
 
         return Ok(result);
     }
@@ -102,8 +108,11 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet("GetOrderProducts")]
-    public async Task<IActionResult> GetOrderProducts()
+    public async Task<IActionResult> GetOrderProducts(int page = 1)
     {
+        if (page < 1)
+            return BadRequest("The page number must be greater than 0");
+
         var result = await _context.OrderProducts.Select(o => new
         {
             Id = o.Id,
@@ -112,7 +121,7 @@ public class OrderController : ControllerBase
             ProductName = o.ProductName,
             Quantity = o.Quantity,
             Price = o.Price
-        }).ToListAsync();
+        }).Skip((page - 1) * 10).Take(10).ToListAsync();
 
         return Ok(result);
     }
@@ -151,6 +160,9 @@ public class OrderController : ControllerBase
 
         if (product is null)
             return NotFound("The product does not exists");
+        
+        if (product.Stock < newOrder.Quantity)
+            return BadRequest("The product has not enough stock for the order");
 
         var order = new Order
         {
@@ -165,6 +177,7 @@ public class OrderController : ControllerBase
         };
 
         order.TotalPrice = order.OrderedProducts.Sum(o => o.Price);
+        product.Stock -= newOrder.Quantity;
 
         _context.Orders.Add(order);
         await _context.SaveChangesAsync();
@@ -187,6 +200,9 @@ public class OrderController : ControllerBase
 
         if (product is null)
             return NotFound("The product does not exists");
+        
+        if (product.Stock < quantity)
+            return BadRequest("The product has not enough stock for the order");
 
         OrderProduct? orderProduct = order.OrderedProducts.Find(o => o.ProductId == productId);
 
@@ -201,6 +217,7 @@ public class OrderController : ControllerBase
         orderProduct.Price = product.Price * orderProduct.Quantity;
 
         order.TotalPrice += (product.Price * quantity);
+        product.Stock -= quantity;
 
         await _context.SaveChangesAsync();
 
@@ -227,10 +244,25 @@ public class OrderController : ControllerBase
     [HttpDelete("DeleteOrder/{id}")]
     public async Task<IActionResult> DeleteOrder(int id)
     {
-        var rowsAffected = await _context.Orders.Where(o => o.Id == id).ExecuteDeleteAsync();
+        var order = await _context.Orders.Include(o => o.OrderedProducts).FirstOrDefaultAsync(o => o.Id == id);
 
-        if (rowsAffected <= 0)
+        if (order is null)
             return NotFound();
+        
+        var productIds = order.OrderedProducts.Where(o => o.ProductId != null).Select(o => o.ProductId).ToList();
+        var products = await _context.Products.Where(p => productIds.Contains(p.Id)).ToListAsync();
+
+        foreach (OrderProduct orderProduct in order.OrderedProducts)
+        {
+            if (orderProduct.ProductId != null)
+            {
+                var product = products.Find(p => p.Id == orderProduct.ProductId);
+                product.Stock += orderProduct.Quantity;
+            }
+        }
+
+        _context.Orders.Remove(order);
+        await _context.SaveChangesAsync();
 
         return Ok();
     }
@@ -247,6 +279,12 @@ public class OrderController : ControllerBase
 
         if (order.Receipt != null)
             return BadRequest("The order has a receipt generated and cannot be modified");
+        
+        if (orderProduct.ProductId != null)
+        {
+            var product = await _context.Products.FindAsync(orderProduct.ProductId);
+            product.Stock += orderProduct.Quantity;
+        }
 
         order.TotalPrice -= orderProduct.Price;
         _context.OrderProducts.Remove(orderProduct);

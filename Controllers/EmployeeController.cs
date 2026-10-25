@@ -17,15 +17,18 @@ public class EmployeeController : ControllerBase
     }
 
     [HttpGet("GetEmployees")]
-    public async Task<IActionResult> GetEmployees()
+    public async Task<IActionResult> GetEmployees(int page = 1)
     {
+        if (page < 1)
+            return BadRequest("The page number must be greater than 0");
+
         var result = await _context.Employees.Select(e => new
         {
             Id = e.Id,
             Name = e.Name,
             CityId = e.CityId,
             ShopId = e.ShopId
-        }).ToListAsync();
+        }).Skip((page - 1) * 10).Take(10).ToListAsync();
 
         return Ok(result);
     }

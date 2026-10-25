@@ -17,8 +17,11 @@ public class ProviderController : ControllerBase
     }
 
     [HttpGet("GetProviders")]
-    public async Task<IActionResult> GetProviders()
+    public async Task<IActionResult> GetProviders(int page = 1)
     {
+        if (page < 1)
+            return BadRequest("The page number must be greater than 0");
+
         var result = await _context.Providers.Select(p => new
         {
             Id = p.Id,
@@ -29,7 +32,7 @@ public class ProviderController : ControllerBase
                 Name = pr.Name,
                 Price = $"{pr.Price:C}"
             }).ToList()
-        }).ToListAsync();
+        }).Skip((page - 1) * 10).Take(10).ToListAsync();
 
         return Ok(result);
     }

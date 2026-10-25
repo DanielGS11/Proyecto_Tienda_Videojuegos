@@ -18,14 +18,17 @@ public class ClientController : ControllerBase
     }
 
     [HttpGet("GetClients")]
-    public async Task<IActionResult> GetClients()
+    public async Task<IActionResult> GetClients(int page = 1)
     {
+        if (page < 1)
+            return BadRequest("The page number must be greater than 0");
+        
         var result = await _context.Clients.Select(c => new
         {
             Id = c.Id,
             Name = c.Name,
             CityId = c.CityId
-        }).ToListAsync();
+        }).Skip((page - 1) * 10).Take(10).ToListAsync();
 
         return Ok(result);
     }

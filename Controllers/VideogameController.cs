@@ -19,17 +19,21 @@ public class VideogameController : ControllerBase
     }
     
     [HttpGet("GetVideogames")]
-    public async Task<IActionResult> GetVideogames()
+    public async Task<IActionResult> GetVideogames(int page = 1)
     {
+        if (page < 1)
+            return BadRequest("The page number must be greater than 0");
+
         var result = await _context.Videogames.Select(v => new
         {
             Id = v.Id,
             Name = v.Name,
+            Stock = v.Stock,
             Developer = v.Developer,
             Genres = v.Genres,
             Price = $"{v.Price:C}",
             Platforms = v.Platforms.Select(p => p.Name).ToList()
-        }).ToListAsync();
+        }).Skip((page - 1) * 10).Take(10).ToListAsync();
 
         return Ok(result);
     }
@@ -41,6 +45,7 @@ public class VideogameController : ControllerBase
         {
             Id = v.Id,
             Name = v.Name,
+            Stock = v.Stock,
             Developer = v.Developer,
             Genres = v.Genres,
             Price = $"{v.Price:C}",

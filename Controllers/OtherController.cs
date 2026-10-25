@@ -18,15 +18,19 @@ public class OtherController : ControllerBase
     }
 
     [HttpGet("GetProducts")]
-    public async Task<IActionResult> GetProducts()
+    public async Task<IActionResult> GetProducts(int page = 1)
     {
+        if (page < 1)
+            return BadRequest("The page number must be greater than 0");
+
         var result = await _context.Products.Select(p => new
         {
             Id = p.Id,
             Name = p.Name,
+            Stock = p.Stock,
             Price = p.Price,
             Type = p is Videogame ? "Videogame" : "Platform"
-        }).ToListAsync();
+        }).Skip((page - 1) * 10).Take(10).ToListAsync();
 
         return Ok(result);
     }
@@ -38,6 +42,7 @@ public class OtherController : ControllerBase
         {
             Id = p.Id,
             Name = p.Name,
+            Stock = p.Stock,
             Price = p.Price,
             Type = p is Videogame ? "Videogame" : "Platform"
         }).FirstOrDefaultAsync();
@@ -48,11 +53,28 @@ public class OtherController : ControllerBase
         return Ok(result);
     }
 
+    [HttpPut("UpdateProductStock/{id}")]
+    public async Task<IActionResult> UpdateProductStock(int id, int stock)
+    {
+        if (stock < 1)
+            return BadRequest("The stock cannot be below 1");
+
+        var product = await _context.Products.FindAsync(id);
+
+        if (product is null)
+            return NotFound();
+        
+        product.Stock = stock;
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
+
     [HttpPost("ResetDB")]
     public async Task<IActionResult> ResetDB()
     {
         await _context.Database.EnsureDeletedAsync();
-        await _context.Database.EnsureCreatedAsync();
+        await _context.Database.MigrateAsync();
 
         var city1 = new City { Name = "City 1" };
         var city2 = new City { Name = "City 2" };
@@ -61,19 +83,19 @@ public class OtherController : ControllerBase
         _context.Cities.AddRange([city1, city2, city3]);
         await _context.SaveChangesAsync();
 
-        var platform1 = new Platform { Name = "Platform 1", Price = 329, Company = "Company 1" };
-        var platform2 = new Platform { Name = "Platform 2", Price = 650, Company = "Company 2" };
-        var platform3 = new Platform { Name = "Platform 3", Price = 699.99f, Company = "Company 3" };
-        var platform4 = new Platform { Name = "Platform 4", Price = 500, Company = "Company 4" };
+        var platform1 = new Platform { Name = "Platform 1", Stock = 4, Price = 329, Company = "Company 1" };
+        var platform2 = new Platform { Name = "Platform 2", Stock = 6, Price = 650, Company = "Company 2" };
+        var platform3 = new Platform { Name = "Platform 3", Stock = 9, Price = 699.99f, Company = "Company 3" };
+        var platform4 = new Platform { Name = "Platform 4", Stock = 11, Price = 500, Company = "Company 4" };
 
         _context.Platforms.AddRange([platform1, platform2, platform3, platform4]);
         await _context.SaveChangesAsync();
 
-        var videogame1 = new Videogame { Name = "Game 1", Price = 44.99f, Developer = "Dev 1", 
+        var videogame1 = new Videogame { Name = "Game 1", Stock = 60, Price = 44.99f, Developer = "Dev 1", 
             Genres = [Genre.RPG, Genre.Adventure], Platforms = [platform1] };
-        var videogame2 = new Videogame { Name = "Game 2", Price = 59.99f, Developer = "Dev 2", 
+        var videogame2 = new Videogame { Name = "Game 2", Stock = 10, Price = 59.99f, Developer = "Dev 2", 
             Genres = [Genre.OpenWorld, Genre.Action], Platforms = [platform1, platform3, platform4] };
-        var videogame3 = new Videogame { Name = "Game 3", Price = 50, Developer = "Dev 3", 
+        var videogame3 = new Videogame { Name = "Game 3", Stock = 8, Price = 50, Developer = "Dev 3", 
             Genres = [Genre.Action], Platforms = [platform2] };
         
         _context.Videogames.AddRange([videogame1, videogame2, videogame3]);
