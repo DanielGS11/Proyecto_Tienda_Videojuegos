@@ -229,7 +229,9 @@ public class OtherController : ControllerBase
         {
             OrderId = order2.Id,
             Price = order2.TotalPrice,
-            CreatedAt = DateTime.Parse("17/04/2000 19:32:42")
+            CreatedAt = DateTime.ParseExact("17/04/2000 19:32:42",
+            "dd/MM/yyyy HH:mm:ss",
+            CultureInfo.InvariantCulture)
         };
 
         _context.Receipts.AddRange([receipt]);
